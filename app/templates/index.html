@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<title>Teleport Data Dashboard</title>
+<style>
+	.dropdown-menu {
+    max-height: 280px;
+    overflow-y: auto;
+}
+</style>
+
+<!--import script files needed fro plotly and bootstrap-->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>	
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+
+</head>
+
+<body>
+
+<!--navbar links-->		
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+   <a class="navbar-brand" href="https://teleport.org/">Teleport Data Dashboard</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+    <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+      <li class="nav-item">
+        <a class="nav-link" href="https://developers.teleport.org/api/">Teleport API</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<!--middle section-->		
+<div class="row">
+
+	<!--social media buttons column-->		
+	<div class="col-1 border-right">
+		<div id="follow-me" class="mt-3">
+			<a href="https://www.linkedin.com/in/mriosrivas/">
+				<img src="/static/img/linkedinlogo.png" alt="linkedin" class="img-fluid mb-4 ml-2">
+			</a>
+			<a href="https://github.com/mriosrivas">
+				<img src="/static/img/githublogo.png" alt="github" class="img-fluid ml-2">
+			</a>
+		</div>
+	</div>
+
+	<!--visualizations column-->		
+	<div class="col-11">
+
+		<!--chart descriptions-->		
+		<div id="middle-info" class="mt-3">
+
+			<h2 id="tag-line">Teleport Data Dashboard</h2>
+			<h4 id="tag-line" class="text-muted">Evaluate job and life quaility around the world</h4>
+			<p>
+				Teleport is a company that builds one of the largest and most up-to-date 
+				quality of life databases for Planet Earth using 300+ different data dimensions from 70+ different sources.
+			</p>
+			<p>
+				This dashboard uses Teleport Open API to request information about job salaries and quality of life of 
+				different cities and countries.
+			</p>
+			
+		</div>
+		
+		
+
+		<hr>
+
+		<!-- dropdown menu for filter -->
+		<form class="px-4 py-3" role="form" method="post" action="/" id="form-filter">
+		<p>Select up to 5 countries and 5 types of jobs.</p>
+		<select id="country_selection" class="selectpicker" name="country_form" data-live-search="true" multiple data-max-options="5" data-style="form-control" 
+		>
+			{% for country in all_countries %}
+			<option id="country_element">{{country[1]}}</option>
+			{% endfor %}
+		</select>
+
+		<select id="job_selection" class="selectpicker" name="job_form" data-live-search="true" multiple data-max-options="5" data-style="form-control" 
+		>
+			{% for job in all_jobs %}
+			<option id="job_element">{{job[1]}}</option>
+			{% endfor %}
+		</select>
+
+		<button id="country_selector" type="submit" class="btn btn-primary my-1">Submit</button>
+		</form>
+
+
+		<!--charts-->		
+		<div id="charts" class="container mt-3 text-center">
+					
+			<!--top two charts-->		
+			<div class="row">
+				<div class="col-6">
+					<div id="{{ids[0]}}"></div>
+					<p>
+						The first job you selected will be compared with each country selected.
+					</p>
+				</div>
+				<div class="col-6">
+					<div id="{{ids[1]}}"></div>
+					<p>
+						The first country you selected will be compared with each job selected. 
+					</p>
+				</div>
+			</div>
+
+			<!--bottom two charts-->		
+			<div class="row mb-6">
+				<div class="col-6">	
+					<div id="chart3">
+						<div id="{{ids[2]}}"></div>
+						<p>On a scale from 0 to 10, where 10 is the best.</p>
+					</div>
+				</div>
+				<div class="col-6">
+					<div id="chart4">
+						<div id="{{ids[3]}}"></div>
+						<p>On a scale from 0 to 10, where 10 is the best.</p>
+					</div>
+				<div>
+			</div>
+		
+		</div>
+	<div>
+</div>
+
+
+<!--footer section-->				
+<div id="footer" class="container"></div>
+
+</body>
+
+
+<footer>
+    <script type="text/javascript">
+    	// plots the figure by id using Plotly
+    	// id much match the div id above in the html
+    	
+		var figures = {{figuresJSON | safe}};
+		var ids = {{ids | safe}};
+		for(var i in figures) {
+			Plotly.plot(ids[i],
+				figures[i].data,
+				figures[i].layout || {});
+		};
+		console.log({{figuresJSON | safe}})
+		
+
+    </script>
+
+</footer>
+
+
+</html>
